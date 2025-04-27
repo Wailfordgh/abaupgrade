@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online School Base Assessment System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Sparkle Animation */
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #fff;
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #3498db, 0 0 40px #3498db;
+            animation: sparkle 2s infinite;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        @keyframes sparkle {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            padding-top: 20px;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar.collapsed {
+            margin-left: -220px;
+        }
+        
+        .sidebar-header {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-header::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            opacity: 0;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+        
+        .sidebar-logo {
+            display: block;
+            margin: 0 auto 10px;
+            height: 50px;
+            filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.7));
+            transition: all 0.5s;
+        }
+        
+        .sidebar-logo:hover {
+            transform: rotate(10deg);
+            filter: drop-shadow(0 0 12px rgba(52, 152, 219, 1));
+        }
+        
+        .sidebar-menu {
+            margin-top: 20px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            transition: all 0.3s;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a::before {
+            content: "";
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.2), transparent);
+            transition: all 0.5s;
+        }
+        
+        .sidebar-menu a:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #34495e;
+            border-left: 4px solid #3498db;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a span {
+            margin-right: 10px;
+        }
+        
+        /* Main content area */
+        .content {
+            flex: 1;
+            margin-left: 220px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .content.expanded {
+            margin-left: 0;
+        }
+        
+        /* Toggle button */
+        #sidebarToggle {
+            position: fixed;
+            left: 230px;
+            top: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+                box-shadow: 0 5px 15px 0px rgba(0,0,0,0.2);
+            }
+            50% {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 15px 0px rgba(0,0,0,0.1);
+            }
+            100% {
+                transform: translateY(0px);
+                box-shadow: 0 5px 15px 0px rgba(0,0,0,0.2);
+            }
+        }
+        
+        #sidebarToggle.collapsed {
+            left: 20px;
+        }
+        
+        #sidebarToggle:hover {
+            background-color: #2980b9;
+            transform: rotate(180deg);
+        }
+        
+        /* Home Page */
+        .hero-section {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border-radius: 15px;
+            padding: 50px;
+            margin: 60px 20px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .magic-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(52, 152, 219, 0.2), rgba(44, 62, 80, 0.2));
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        .logo-container {
+            margin: 0 auto 30px;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 30px rgba(52, 152, 219, 0.5);
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .logo-container::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(from 0deg, transparent 0%, rgba(52, 152, 219, 0.5) 10%, transparent 20%);
+            animation: rotate 4s linear infinite;
+            border-radius: 50%;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .main-logo {
+            width: 80%;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(52, 152, 219, 0.7));
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .logo-container:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 50px rgba(52, 152, 219, 0.8);
+        }
+        
+        .logo-container:hover .main-logo {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .quick-link-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .quick-link-card:nth-child(2) {
+            animation-delay: 0.8s;
+        }
+        
+        .quick-link-card:nth-child(3) {
+            animation-delay: 1s;
+        }
+        
+        .quick-link-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .quick-link-card:hover::after {
+            opacity: 1;
+        }
+        
+        .quick-link-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quick-link-card span {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #3498db;
+            transition: all 0.5s;
+        }
+        
+        .quick-link-card:hover span {
+            transform: scale(1.2);
+            animation: wiggle 1s ease-in-out;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-10deg) scale(1.2); }
+            75% { transform: rotate(10deg) scale(1.2); }
+        }
+        
+        .quick-link-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .quick-link-card h3::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: #3498db;
+            transition: all 0.5s;
+        }
+        
+        .quick-link-card:hover h3::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .quick-link-card button {
+            display: inline-block;
+            margin-top: 10px;
+            color: white;
+            background-color: #3498db;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.5s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .quick-link-card button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+        
+        .quick-link-card button:hover::before {
+            left: 100%;
+        }
+        
+        .quick-link-card button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* iframe container */
+        .iframe-container {
+            display: none;
+            flex: 1;
+            margin: 20px 20px 80px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: all 0.5s;
+        }
+        
+        /* New Fancy Loading Animation */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(44, 62, 80, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .fancy-loader {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+        
+        .loader-text {
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: pulse-text 1.5s infinite;
+        }
+        
+        @keyframes pulse-text {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .widget-spinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .widget-component {
+            position: absolute;
+            background-color: #3498db;
+            border-radius: 50%;
+            animation: scale-pulse 1.5s infinite;
+        }
+        
+        .widget-center {
+            width: 40px;
+            height: 40px;
+            top: 40px;
+            left: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+            z-index: 5;
+        }
+        
+        .widget-orbit {
+            width: 20px;
+            height: 20px;
+            animation: orbit 3s linear infinite;
+        }
+        
+        .widget-orbit:nth-child(1) {
+            animation-delay: 0s;
+            background-color: #e74c3c;
+        }
+        
+        .widget-orbit:nth-child(2) {
+            animation-delay: -1s;
+            background-color: #2ecc71;
+        }
+        
+        .widget-orbit:nth-child(3) {
+            animation-delay: -2s;
+            background-color: #f39c12;
+        }
+        
+        @keyframes scale-pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes orbit {
+            0% {
+                transform: translate(60px, 60px) rotate(0deg) translate(-60px, -60px) translate(60px, 0);
+            }
+            100% {
+                transform: translate(60px, 60px) rotate(360deg) translate(-60px, -60px) translate(60px, 0);
+            }
+        }
+        
+        Updated Footer Styles */
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    font-size: 11px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    height: 30px; /* Reduced height */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer.hidden {
+    transform: translateY(100%);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-logo {
+    height: 20px; /* Smaller logo */
+    margin-right: 8px;
+    filter: drop-shadow(0 0 2px rgba(52, 152, 219, 0.5));
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+}
+
+.footer-left span {
+    font-size: 11px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+.footer-links {
+    display: flex;
+}
+
+.footer-links a {
+    color: #3d021b;
+    margin: 0 8px;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+.footer-links a:hover {
+    color: #3498db;
+}
+
+.copyright {
+    color: #570505;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer-content {
+        justify-content: space-between;
+        padding: 0;
+    }
+    
+    .footer {
+        height: 25px;
+        padding: 3px 10px;
+    }
+    
+    .footer-left {
+        margin-bottom: 0;
+    }
+    
+    .footer-links a {
+        margin: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-left span {
+        display: none;
+    }
+    
+    .footer-logo {
+        height: 18px;
+        margin-right: 0;
+    }
+    
+    .footer-links a {
+        margin: 0 3px;
+        font-size: 9px;
+    }
+    
+    .copyright {
+        font-size: 9px;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loader-container" id="loaderContainer">
+        <div class="fancy-loader">
+            <div class="widget-spinner">
+                <div class="widget-center widget-component"></div>
+                <div class="widget-orbit widget-component"></div>
+                <div class="widget-orbit widget-component"></div>
+                <div class="widget-orbit widget-component"></div>
+            </div>
+        </div>
+        <div class="loader-text">Loading Magic...</div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://imgur.com/N0sEqK0.png" alt="Logo" class="sidebar-logo">
+            <h3>MTTC Practice Primary</h3>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" data-page="home" class="active"><span>🏠</span> Dashboard</a>
+            <a href="#" data-page="scores" data-src="https://script.google.com/macros/s/AKfycby19hv4pLl16ihvJRY-JSS9HEk_oOvO-ut7BDdUXxQpgyf-Uk-nnlO2_2o9jf0sGJhOAQ/exec"><span>📊</span> Scores</a>
+            <a href="#" data-page="students" data-src="https://script.google.com/macros/s/AKfycbxMeaouh8y4qhqMa4n4CThHSQRyNkfpGAAh47bpA_L9X30Hk7I7m4gyCtHP6X0GLLBu/exec"><span>👨‍🎓</span> Students</a>
+            <a href="#" data-page="reports" data-src="https://script.google.com/macros/s/AKfycbyWD0G-ZssNlinpKzkSc5q8Wu61mg6WX20OSBlZtVfWjpYsHCyZCiI-k4ZBwYzAto_zFg/exec"><span>📄</span> Student Reports</a>
+        </div>
+    </div>
+
+    <!-- Toggle button for sidebar -->
+    <button id="sidebarToggle">
+        ☰
+    </button>
+
+    <!-- Main content area -->
+    <div class="content" id="content">
+        <!-- Home/Dashboard page -->
+        <div id="homePage" class="hero-section">
+            <div class="magic-background"></div>
+            <div class="logo-container">
+                <img src="https://i.imgur.com/l9dDRok.png" alt="Main Logo" class="main-logo">
+            </div>
+            <h1>Online School Base Assessment System</h1>
+            <p>A comprehensive platform designed to streamline academic administration, track student performance, and generate insightful reports.</p>
+            
+            <div class="quick-links">
+                <div class="quick-link-card">
+                    <span>📊</span>
+                    <h3>Student Scores</h3>
+                    <button data-page="scores">Access Scores</button>
+                </div>
+                
+                <div class="quick-link-card">
+                    <span>👨‍🎓</span>
+                    <h3>Student Management</h3>
+                    <button data-page="students">Manage Students</button>
+                </div>
+                
+                <div class="quick-link-card">
+                    <span>📄</span>
+                    <h3>Student Reports</h3>
+                    <button data-page="reports">View Reports</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- iframe container for embedded content -->
+        <div id="iframeContainer" class="iframe-container">
+            <iframe id="contentFrame" src="" title="Content" frameborder="0"></iframe>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer" id="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <img src="https://imgur.com/N0sEqK0.png" alt="Footer Logo" class="footer-logo">
+                    <span>OSBA System</span>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Support</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Online School Base Assessment System. All rights reserved|Developed by TechLaw Softwares.
+            </div>
+        </footer>
+    </div>
+    
+    <!-- JavaScript for page functionality -->
+    <script>
+
+        // Footer auto-hide functionality
+        document.addEventListener('DOMContentLoaded', function() {
+    const footer = document.getElementById('footer');
+    let lastScrollTop = 0;
+    let footerTimeout;
+    
+    // Initially show footer
+    footer.classList.remove('hidden');
+    
+    // Hide footer after 3 seconds on page load
+    footerTimeout = setTimeout(() => {
+        footer.classList.add('hidden');
+    }, 3000);
+    
+    // Handle scroll behavior
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop) {
+            // Scrolling down - hide footer
+            footer.classList.add('hidden');
+            clearTimeout(footerTimeout);
+        } else {
+            // Scrolling up - show footer
+            footer.classList.remove('hidden');
+            
+            // Auto-hide after 3 seconds of no scrolling
+            clearTimeout(footerTimeout);
+            footerTimeout = setTimeout(() => {
+                footer.classList.add('hidden');
+            }, 3000);
+        }
+        lastScrollTop = scrollTop;
+    });
+    
+    // Show footer when mouse is near bottom of page
+    document.addEventListener('mousemove', function(e) {
+        const windowHeight = window.innerHeight;
+        const footerTriggerZone = windowHeight - 40; // Smaller trigger zone
+        
+        if (e.clientY > footerTriggerZone) {
+            footer.classList.remove('hidden');
+            clearTimeout(footerTimeout);
+            
+            // Auto-hide after mouse leaves the area
+            footerTimeout = setTimeout(() => {
+                footer.classList.add('hidden');
+            }, 3000);
+        }
+    });
+});
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const homePage = document.getElementById('homePage');
+            const iframeContainer = document.getElementById('iframeContainer');
+            const contentFrame = document.getElementById('contentFrame');
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            const quickLinkButtons = document.querySelectorAll('.quick-link-card button');
+            const loaderContainer = document.getElementById('loaderContainer');
+            
+            // Create sparkling effect
+            function createSparkles() {
+                const heroSection = document.querySelector('.hero-section');
+                const quickLinkCards = document.querySelectorAll('.quick-link-card');
+                
+                // Add sparkles to hero section
+                setInterval(() => {
+                    if (homePage.style.display !== 'none') {
+                        const sparkle = document.createElement('div');
+                        sparkle.classList.add('sparkle');
+                        
+                        // Random position within the hero section
+                        const x = Math.random() * heroSection.offsetWidth;
+                        const y = Math.random() * heroSection.offsetHeight;
+                        
+                        sparkle.style.left = `${x}px`;
+                        sparkle.style.top = `${y}px`;
+                        
+                        heroSection.appendChild(sparkle);
+                        
+                        // Remove sparkle after animation completes
+                        setTimeout(() => {
+                            sparkle.remove();
+                        }, 2000);
+                    }
+                }, 300);
+                
+                // Add sparkles to quick link cards when hovered
+                quickLinkCards.forEach(card => {
+                    card.addEventListener('mouseover', function() {
+                        const interval = setInterval(() => {
+                            if (!card.matches(':hover')) {
+                                clearInterval(interval);
+                                return;
+                            }
+                            
+                            const sparkle = document.createElement('div');
+                            sparkle.classList.add('sparkle');
+                            
+                            // Random position within the card
+                            const x = Math.random() * card.offsetWidth;
+                            const y = Math.random() * card.offsetHeight;
+                            
+                            sparkle.style.left = `${x}px`;
+                            sparkle.style.top = `${y}px`;
+                            
+                            card.appendChild(sparkle);
+                            
+                            // Remove sparkle after animation completes
+                            setTimeout(() => {
+                                sparkle.remove();
+                            }, 2000);
+                        }, 200);
+                    });
+                });
+            }
+            
+            // Initialize sparkles
+            createSparkles();
+            
+            // Hide loader after page loads with fancy animation
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loaderContainer.style.opacity = '0';
+                    setTimeout(function() {
+                        loaderContainer.style.display = 'none';
+                    }, 500); // Wait for fade out animation
+                }, 1200); // Show spinner for at least 1200ms for better effect
+            });
+            
+            // Sidebar toggle functionality with enhanced animation
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+                toggleBtn.classList.toggle('collapsed');
+                
+                // Change toggle button text based on sidebar state
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleBtn.textContent = '☰';
+                } else {
+                    toggleBtn.textContent = '✖';
+                }
+            });
+            
+            // Enhanced page switching with magical transitions
+            function switchPage(pageId) {
+                // Show loader when changing pages
+                loaderContainer.style.display = 'flex';
+                loaderContainer.style.opacity = '1';
+                
+                menuItems.forEach(item => item.classList.remove('active'));
+                
+                // Set active state for clicked menu item
+                const activeMenuItem = document.querySelector(`.sidebar-menu a[data-page="${pageId}"]`);
+                if (activeMenuItem) {
+                    activeMenuItem.classList.add('active');
+                }
+                
+                if (pageId === 'home') {
+                    // Fade out iframe if visible
+                    if (iframeContainer.style.display === 'block') {
+                        iframeContainer.style.opacity = '0';
+                        setTimeout(() => {
+                            iframeContainer.style.display = 'none';
+                            showHomePage();
+                        }, 300);
+                    } else {
+                        showHomePage();
+                    }
+                    
+                    function showHomePage() {
+                        // Show home page with magical entrance
+                        homePage.style.opacity = '0';
+                        homePage.style.display = 'block';
+                        
+                        // Create magical entrance effect
+                        setTimeout(() => {
+                            homePage.style.opacity = '1';
+                            homePage.style.transform = 'scale(1)';
+                            
+                            // Add burst of sparkles
+                            for (let i = 0; i < 20; i++) {
+                                setTimeout(() => {
+                                    const sparkle = document.createElement('div');
+                                    sparkle.classList.add('sparkle');
+                                    
+                                    // Random position around the logo
+                                    const logoContainer = document.querySelector('.logo-container');
+                                    const rect = logoContainer.getBoundingClientRect();
+                                    const centerX = rect.left + rect.width/2;
+                                    const centerY = rect.top + rect.height/2;
+                                    
+                                    // Position relative to center with random angle and distance
+                                    const angle = Math.random() * Math.PI * 2;
+                                    const distance = 100 + Math.random() * 150;
+                                    const x = centerX + Math.cos(angle) * distance;
+                                    const y = centerY + Math.sin(angle) * distance;
+                                    
+                                    sparkle.style.left = `${x}px`;
+                                    sparkle.style.top = `${y}px`;
+                                    
+                                    document.body.appendChild(sparkle);
+                                    
+                                    // Remove sparkle after animation completes
+                                    setTimeout(() => {
+                                        sparkle.remove();
+                                    }, 2000);
+                                }, i * 50);
+                            }
+                            
+                            // Hide loader after animation completes
+                            setTimeout(() => {
+                                loaderContainer.style.opacity = '0';
+                                setTimeout(() => {
+                                    loaderContainer.style.display = 'none';
+                                }, 500);
+                            }, 300);
+                        }, 100);
+                    }
+                } else {
+                    // Fade out home page if visible
+                    if (homePage.style.display !== 'none') {
+                        homePage.style.opacity = '0';
+                        setTimeout(() => {
+                            homePage.style.display = 'none';
+                            showIframe();
+                        }, 300);
+                    } else {
+                        showIframe();
+                    }
+                    
+                    function showIframe() {
+                        // Show iframe with zoom in effect
+                        iframeContainer.style.transform = 'scale(0.95)';
+                        iframeContainer.style.opacity = '0';
+                        iframeContainer.style.display = 'block';
+                        
+                        // Get the URL from the menu item data attribute
+                        const src = activeMenuItem.getAttribute('data-src');
+                        if (src) {
+                            contentFrame.src = src;
+                            
+                            // Zoom in effect after iframe loads
+                            contentFrame.onload = function() {
+                                setTimeout(() => {
+                                    iframeContainer.style.opacity = '1';
+                                    iframeContainer.style.transform = 'scale(1)';
+                                    
+                                    // Hide loader after animation completes
+                                    setTimeout(() => {
+                                        loaderContainer.style.opacity = '0';
+                                        setTimeout(() => {
+                                            loaderContainer.style.display = 'none';
+                                        }, 500);
+                                    }, 300);
+                                }, 100);
+                            };
+                        }
+                    }
+                }
+            }
+            
+            // Menu item click handlers
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    switchPage(pageId);
+                });
+            });
+            
+            // Quick link button click handlers with magical effects
+            quickLinkButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Add ripple effect on button click
+                    const ripple = document.createElement('div');
+                    ripple.classList.add('ripple');
+                    ripple.style.width = ripple.style.height = Math.max(button.offsetWidth, button.offsetHeight) + 'px';
+                    button.appendChild(ripple);
+                    
+                    // Position the ripple
+                    const rect = button.getBoundingClientRect();
+                    ripple.style.left = (e.clientX - rect.left - ripple.offsetWidth / 2) + 'px';
+                    ripple.style.top = (e.clientY - rect.top - ripple.offsetHeight / 2) + 'px';
+                    
+                    // Add ripple animation class
+                    ripple.classList.add('animate');
+                    
+                    // Remove ripple element after animation completes
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                    
+                    const pageId = this.getAttribute('data-page');
+                    
+                    // Make sure sidebar is visible with magical transition
+                    if (sidebar.classList.contains('collapsed')) {
+                        sidebar.classList.remove('collapsed');
+                        content.classList.remove('expanded');
+                        toggleBtn.classList.remove('collapsed');
+                        toggleBtn.textContent = '✖';
+                        
+                        // Add magical effect when sidebar appears
+                        const sidebarItems = sidebar.querySelectorAll('.sidebar-menu a');
+                        sidebarItems.forEach((item, index) => {
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateX(-20px)';
+                            
+                            setTimeout(() => {
+                                item.style.transition = 'all 0.3s ease-out';
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateX(0)';
+                            }, 100 + index * 50);
+                        });
+                    }
+                    
+                    // Wait a bit for the ripple effect before switching page
+                    setTimeout(() => {
+                        switchPage(pageId);
+                        
+                        // Add sparkle burst at button position
+                        for (let i = 0; i < 10; i++) {
+                            setTimeout(() => {
+                                const sparkle = document.createElement('div');
+                                sparkle.classList.add('sparkle');
+                                
+                                const rect = button.getBoundingClientRect();
+                                const centerX = rect.left + rect.width/2;
+                                const centerY = rect.top + rect.height/2;
+                                
+                                // Position relative to center with random angle and distance
+                                const angle = Math.random() * Math.PI * 2;
+                                const distance = Math.random() * 80;
+                                const x = centerX + Math.cos(angle) * distance;
+                                const y = centerY + Math.sin(angle) * distance;
+                                
+                                sparkle.style.left = `${x}px`;
+                                sparkle.style.top = `${y}px`;
+                                
+                                document.body.appendChild(sparkle);
+                                
+                                // Remove sparkle after animation completes
+                                setTimeout(() => {
+                                    sparkle.remove();
+                                }, 2000);
+                            }, i * 50);
+                        }
+                    }, 200);
+                });
+            });
+            
+            // Add floating animation to cards
+            const cards = document.querySelectorAll('.quick-link-card');
+            cards.forEach((card, index) => {
+                // Add subtle floating animation with different delay for each card
+                card.style.animation = `float 3s ease-in-out infinite ${index * 0.4}s`;
+            });
+            
+            // Add ripple effect style
+            const style = document.createElement('style');
+            style.textContent = `
+                .ripple {
+                    position: absolute;
+                    border-radius: 50%;
+                    background-color: rgba(255, 255, 255, 0.7);
+                    transform: scale(0);
+                    pointer-events: none;
+                }
+                
+                .ripple.animate {
+                    animation: ripple-effect 0.6s linear;
+                }
+                
+                @keyframes ripple-effect {
+                    0% {
+                        transform: scale(0);
+                        opacity: 0.5;
+                    }
+                    100% {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes float {
+                    0% {
+                        transform: translateY(0px);
+                    }
+                    50% {
+                        transform: translateY(-5px);
+                    }
+                    100% {
+                        transform: translateY(0px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Magical zoom effects for logo
+            const logoContainer = document.querySelector('.logo-container');
+            logoContainer.addEventListener('mouseover', function() {
+                const logo = this.querySelector('.main-logo');
+                
+                // Add pulsating glow
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3), 0 0 50px rgba(52, 152, 219, 0.8)';
+                
+                // Add sparkling effect around logo
+                const interval = setInterval(() => {
+                    if (!this.matches(':hover')) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    
+                    // Random position around the logo
+                    const rect = this.getBoundingClientRect();
+                    const centerX = rect.left + rect.width/2;
+                    const centerY = rect.top + rect.height/2;
+                    
+                    // Position relative to center with random angle and distance
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 70 + Math.random() * 30;
+                    const x = centerX + Math.cos(angle) * distance - window.scrollX;
+                    const y = centerY + Math.sin(angle) * distance - window.scrollY;
+                    
+                    sparkle.style.left = `${x}px`;
+                    sparkle.style.top = `${y}px`;
+                    
+                    document.body.appendChild(sparkle);
+                    
+                    // Remove sparkle after animation completes
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, 200);
+            });
+            
+            logoContainer.addEventListener('mouseout', function() {
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2), 0 0 30px rgba(52, 152, 219, 0.5)';
+            });
+            
+            // Initial animation for home page elements
+            function animateHomePageElements() {
+                // Staggered animation for quick link cards
+                const quickLinkCards = document.querySelectorAll('.quick-link-card');
+                quickLinkCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 600 + index * 200);
+                });
+                
+                // Animate hero section text
+                const heroText = document.querySelector('.hero-section p');
+                setTimeout(() => {
+                    heroText.style.opacity = '1';
+                }, 500);
+            }
+            
+            // Run initial animations
+            setTimeout(animateHomePageElements, 500);
+        });
+    </script>
+</body>
+</html>
