@@ -186,6 +186,12 @@
             font-size: 18px; /* Larger icons for mobile */
         }
         
+        .sidebar-menu a.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        
         /* Main content area - mobile first */
         .content {
             flex: 1;
@@ -526,6 +532,310 @@
                 opacity: 0;
             }
         }
+
+        /* Login Form Styles */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.8), rgba(44, 62, 80, 0.9)), url('https://i.imgur.com/QRGXph8.jpg') center/cover;
+            z-index: 2000;
+            perspective: 1000px;
+        }
+        
+        .login-form {
+            width: 90%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            animation: formAppear 0.8s ease-out forwards;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .dark .login-form {
+            background-color: rgba(34, 34, 34, 0.9);
+            color: #e0e0e0;
+        }
+        
+        @keyframes formAppear {
+            0% {
+                opacity: 0;
+                transform: rotateX(-10deg) translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateX(0) translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .login-header img {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+        
+        .login-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .dark .login-header h2 {
+            color: #e0e0e0;
+        }
+        
+        .login-header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .dark .login-header p {
+            color: #bdc3c7;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #34495e;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .dark .form-group label {
+            color: #bdc3c7;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            transition: all 0.3s;
+        }
+        
+        .dark .form-group input[type="text"],
+        .dark .form-group input[type="password"],
+        .dark .form-group select {
+            background-color: rgba(52, 73, 94, 0.2);
+            border-color: #34495e;
+            color: #e0e0e0;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .form-icon {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            color: #95a5a6;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus + .form-icon,
+        .form-group select:focus + .form-icon {
+            color: #3498db;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .login-btn:hover, .login-btn:focus {
+            background: linear-gradient(135deg, #2980b9, #2c3e50);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.5);
+        }
+        
+        .login-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-check input {
+            margin-right: 5px;
+        }
+        
+        .forget-password {
+            color: #3498db;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .forget-password:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .login-bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+            opacity: 0.5;
+        }
+        
+        .bubble:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            bottom: -30px;
+            left: 10%;
+            animation-duration: 6s;
+            animation-delay: 0.2s;
+        }
+        
+        .bubble:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            bottom: 40%;
+            right: 10%;
+            animation-duration: 8s;
+            animation-delay: 0.5s;
+        }
+        
+        .bubble:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: -40px;
+            right: 20%;
+            animation-duration: 7s;
+            animation-delay: 0.8s;
+        }
+        
+        .bubble:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            top: 30%;
+            left: -25px;
+            animation-duration: 5s;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+        
+        .login-error {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+            color: #e74c3c;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            animation: shakeError 0.5s ease-in-out;
+        }
+        
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+        
+        .role-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: none;
+        }
+        
+        .role-indicator.admin {
+            background-color: #e74c3c;
+        }
+        
+        .role-indicator.teacher {
+            background-color: #2ecc71;
+        }
         
         /* Media Queries for larger screens */
         @media (min-width: 768px) {
@@ -683,6 +993,57 @@
         <div class="loader-text">TechLaw Softwares.....</div>
     </div>
 
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-form">
+            <div class="login-bubbles">
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+                <div class="bubble"></div>
+            </div>
+            <div class="login-header">
+                <img src="https://i.imgur.com/l9dDRok.png" alt="Login Logo">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your account</p>
+            </div>
+            <div class="login-error" id="loginError">
+                Invalid username or password. Please try again.
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    <span class="form-icon">👤</span>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="form-icon">🔒</span>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                    <span class="form-icon">👥</span>
+                </div>
+                <button type="submit" class="login-btn" id="loginButton">
+                    Sign In
+                </button>
+                <div class="login-options">
+                    <div class="form-check">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forget-password">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Overlay for mobile sidebar -->
     <div class="overlay" id="overlay"></div>
 
@@ -691,17 +1052,19 @@
         <div class="sidebar-header">
             <img src="https://imgur.com/N0sEqK0.png" alt="Logo" class="sidebar-logo">
             <h3>MTTC Practice Primary</h3>
+            <div class="role-indicator" id="roleIndicator">Admin</div>
         </div>
         
-    <div class="sidebar-menu"
-    <a href="#" data-page="home" class="active"><span>🏠</span> Dashboard</a>
-    <a href="#" data-page="scores" data-src="https://script.google.com/macros/s/AKfycby19hv4pLl16ihvJRY-JSS9HEk_oOvO-ut7BDdUXxQpgyf-Uk-nnlO2_2o9jf0sGJhOAQ/exec"><span>📊</span> Scores</a>
-    <a href="#" data-page="students" data-src="https://script.google.com/macros/s/AKfycbxMeaouh8y4qhqMa4n4CThHSQRyNkfpGAAh47bpA_L9X30Hk7I7m4gyCtHP6X0GLLBu/exec"><span>👨‍🎓</span> Students</a>
-    <a href="#" data-page="student-reports" data-src="https://script.google.com/macros/s/AKfycbyWD0G-ZssNlinpKzkSc5q8Wu61mg6WX20OSBlZtVfWjpYsHCyZCiI-k4ZBwYzAto_zFg/exec"><span>📄</span> Student Reports</a>
-    <a href="#" data-page="broadsheet" data-src="https://script.google.com/macros/s/AKfycbwYFSf9Ylm5wo_ajYBZnRqq5adhUN6672MbKnT4pNzv_7rPLQfZXWrasmGDJzIecEMsCA/exec"><span>📄</span> Broadsheet</a>
-    <a href="#" data-page="results-analysis" data-src="https://script.google.com/macros/s/AKfycby6tbKH61wABSRYhU7J7qoVF_thJS4olhi1pVcBij2HhvIKkl8iXx4HIrLOpYijFZ61ug/exec"><span>📄</span> Results Analysis</a>
-</div>
-</div>
+        <div class="sidebar-menu">
+            <a href="#" data-page="home" class="active"><span>🏠</span> Dashboard</a>
+            <a href="#" data-page="scores" data-src="https://script.google.com/macros/s/AKfycby19hv4pLl16ihvJRY-JSS9HEk_oOvO-ut7BDdUXxQpgyf-Uk-nnlO2_2o9jf0sGJhOAQ/exec"><span>📊</span> Scores</a>
+            <a href="#" data-page="students" data-src="https://script.google.com/macros/s/AKfycbxMeaouh8y4qhqMa4n4CThHSQRyNkfpGAAh47bpA_L9X30Hk7I7m4gyCtHP6X0GLLBu/exec"><span>👨‍🎓</span> Students</a>
+            <a href="#" data-page="student-reports" data-src="https://script.google.com/macros/s/AKfycbyWD0G-ZssNlinpKzkSc5q8Wu61mg6WX20OSBlZtVfWjpYsHCyZCiI-k4ZBwYzAto_zFg/exec"><span>📄</span> Student Reports</a>
+            <a href="#" data-page="broadsheet" data-src="https://script.google.com/macros/s/AKfycbwYFSf9Ylm5wo_ajYBZnRqq5adhUN6672MbKnT4pNzv_7rPLQfZXWrasmGDJzIecEMsCA/exec" class="admin-only"><span>📄</span> Broadsheet</a>
+            <a href="#" data-page="results-analysis" data-src="https://script.google.com/macros/s/AKfycby6tbKH61wABSRYhU7J7qoVF_thJS4olhi1pVcBij2HhvIKkl8iXx4HIrLOpYijFZ61ug/exec" class="admin-only"><span>📄</span> Results Analysis</a>
+            <a href="#" id="logoutBtn"><span>🚪</span> Logout</a>
+        </div>
+    </div>
 
     <!-- Toggle button for sidebar -->
     <button id="sidebarToggle">
@@ -735,7 +1098,7 @@
                 <div class="quick-link-card">
                     <span>📄</span>
                     <h3>Student Reports</h3>
-                    <button data-page="reports">View Reports</button>
+                    <button data-page="student-reports">View Reports</button>
                 </div>
             </div>
         </div>
@@ -780,9 +1143,141 @@
             const quickLinkButtons = document.querySelectorAll('.quick-link-card button');
             const loaderContainer = document.getElementById('loaderContainer');
             const footer = document.getElementById('footer');
+            const loginContainer = document.getElementById('loginContainer');
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            const roleIndicator = document.getElementById('roleIndicator');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const adminOnlyElements = document.querySelectorAll('.admin-only');
+            
+            let currentUserRole = null;
             
             // Check if device is mobile
             const isMobile = window.innerWidth < 768;
+            
+            // Hide main content until login
+            sidebar.style.display = 'none';
+            content.style.display = 'none';
+            toggleBtn.style.display = 'none';
+            footer.style.display = 'none';
+            
+            // Login form submit handling
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const role = document.getElementById('role').value;
+                
+                // Simple validation - in a real app, this would be server-side
+                if ((username === 'admin' && password === 'admin123' && role === 'admin') || 
+                    (username === 'teacher' && password === 'teacher123' && role === 'teacher')) {
+                    
+                    // Show loader during "authentication"
+                    loginContainer.style.display = 'none';
+                    loaderContainer.style.display = 'flex';
+                    loaderContainer.style.opacity = '1';
+                    
+                    // Set current user role
+                    currentUserRole = role;
+                    
+                    // Update role indicator
+                    roleIndicator.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                    roleIndicator.classList.add(role);
+                    roleIndicator.style.display = 'block';
+                    
+                    // Handle access control for admin-only features
+                    if (role === 'admin') {
+                        adminOnlyElements.forEach(item => {
+                            item.classList.remove('disabled');
+                        });
+                    } else {
+                        adminOnlyElements.forEach(item => {
+                            item.classList.add('disabled');
+                        });
+                    }
+                    
+                    // Simulate loading delay for authentication
+                    setTimeout(function() {
+                        // Show main interface
+                        sidebar.style.display = 'block';
+                        content.style.display = 'block';
+                        toggleBtn.style.display = 'flex';
+                        footer.style.display = 'flex';
+                        
+                        // Initialize sidebar state based on device
+                        if (isMobile) {
+                            sidebar.classList.remove('active');
+                            toggleBtn.textContent = '☰';
+                        } else {
+                            sidebar.classList.add('active');
+                            toggleBtn.textContent = '✖';
+                        }
+                        
+                        // Hide loader
+                        loaderContainer.style.opacity = '0';
+                        setTimeout(() => {
+                            loaderContainer.style.display = 'none';
+                        }, 500);
+                        
+                        // Show welcome animation on dashboard
+                        const logoContainer = document.querySelector('.logo-container');
+                        logoContainer.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            logoContainer.style.transform = '';
+                        }, 600);
+                    }, 2000);
+                } else {
+                    // Show error for invalid credentials
+                    loginError.style.display = 'block';
+                    loginError.style.animation = 'none';
+                    void loginError.offsetWidth; // Trigger reflow
+                    loginError.style.animation = 'shakeError 0.5s ease-in-out';
+                    
+                    // Add vibration effect if supported
+                    if (navigator.vibrate) {
+                        navigator.vibrate([100, 50, 100]);
+                    }
+                    
+                    // Clear password field
+                    document.getElementById('password').value = '';
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loader during "logout"
+                loaderContainer.style.display = 'flex';
+                loaderContainer.style.opacity = '1';
+                
+                setTimeout(function() {
+                    // Reset form fields
+                    loginForm.reset();
+                    loginError.style.display = 'none';
+                    
+                    // Hide main interface
+                    sidebar.style.display = 'none';
+                    content.style.display = 'none';
+                    toggleBtn.style.display = 'none';
+                    footer.style.display = 'none';
+                    
+                    // Reset user role
+                    currentUserRole = null;
+                    roleIndicator.style.display = 'none';
+                    roleIndicator.classList.remove('admin', 'teacher');
+                    
+                    // Show login form
+                    loginContainer.style.display = 'flex';
+                    
+                    // Hide loader
+                    loaderContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        loaderContainer.style.display = 'none';
+                    }, 500);
+                }, 1500);
+            });
             
             // Initialize sidebar state based on device
             if (isMobile) {
@@ -924,6 +1419,13 @@
             
             // Enhanced page switching
             function switchPage(pageId) {
+                // Check role-based access control
+                if ((pageId === 'broadsheet' || pageId === 'results-analysis') && currentUserRole !== 'admin') {
+                    // Show access denied message or redirect
+                    alert('Access Denied: This feature is only available to administrators.');
+                    return;
+                }
+                
                 // Show loader
                 loaderContainer.style.display = 'flex';
                 loaderContainer.style.opacity = '1';
@@ -1018,6 +1520,16 @@
             menuItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
+                    // Skip if this is the logout button
+                    if (this.id === 'logoutBtn') return;
+                    
+                    // Skip if disabled (for teacher trying to access admin features)
+                    if (this.classList.contains('disabled')) {
+                        alert('Access Denied: This feature is only available to administrators.');
+                        return;
+                    }
+                    
                     const pageId = this.getAttribute('data-page');
                     switchPage(pageId);
                 });
@@ -1045,6 +1557,13 @@
                     }, 600);
                     
                     const pageId = this.getAttribute('data-page');
+                    
+                    // Check role-based access control
+                    if ((pageId === 'broadsheet' || pageId === 'results-analysis') && currentUserRole !== 'admin') {
+                        // Show access denied message
+                        alert('Access Denied: This feature is only available to administrators.');
+                        return;
+                    }
                     
                     // Make sidebar visible on mobile
                     if (isMobile && !sidebar.classList.contains('active')) {
@@ -1102,6 +1621,30 @@
             setTheme();
             
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setTheme);
+            
+            // Floating bubbles animation for login form
+            function createLoginBubbles() {
+                const bubbles = document.querySelectorAll('.bubble');
+                bubbles.forEach(bubble => {
+                    // Add random initial positions
+                    bubble.style.left = `${Math.random() * 100}%`;
+                    bubble.style.top = `${Math.random() * 100}%`;
+                });
+            }
+            
+            createLoginBubbles();
+            
+            // Toggle password visibility
+            document.querySelector('.form-icon').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    this.textContent = '👁️';
+                } else {
+                    passwordInput.type = 'password';
+                    this.textContent = '🔒';
+                }
+            });
             
             // Handle touch events for improved mobile experience
             document.addEventListener('touchstart', function() {
